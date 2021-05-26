@@ -1,0 +1,18 @@
+{
+  "family": "retrieval-service",
+  "containerDefinitions": [{
+    "environment": [],
+    "name": "retrieval-service",
+    "image": "solana-stats/retrieval-service",
+    "cpu": 256,
+    "memory": 256,
+    "portMappings": [{
+      "containerPort": 8080,
+      "hostPort": 0
+    }],
+    "essential": true
+  }],
+  "requiresCompatibilities": [
+    "EC2"
+  ]
+}
