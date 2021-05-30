@@ -4,7 +4,7 @@
     "environment": [],
     "name": "retrieval-service",
     "image": "solana-stats/retrieval-service",
-    "cpu": 256,
+    "cpu": 512,
     "memory": 256,
     "portMappings": [{
       "containerPort": 8080,
