@@ -29,6 +29,7 @@ const startLoading = async () => {
 function analyzeBlock(slot, block) {
   let dbKeys = ['block', 'block_time', 'fee_amt'];
   let dbValues = [slot, block.blockTime, getFees(block)];
+  console.log(dbValues);
   insertNewBlock(dbKeys, dbValues);
 }
 
