@@ -27,7 +27,6 @@ const startLoading = async () => {
       currentSlot--;
       sleepTime = 10000;
     });
-
     currentSlot++;
     await sleep(sleepTime);
   }
