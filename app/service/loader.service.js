@@ -1,6 +1,6 @@
 const { getFees } = require('./transaction.service');
 const { getCurrentSlot, getConfirmedBlock } = require('./rpc.service')
-const { sleep } = require('../util/loader.helper')
+const { sleep, convertEpochToTimestamp } = require('../util/loader.helper')
 const { insertNewBlock } = require('./db.service')
 
 const startLoading = async () => {
@@ -34,8 +34,7 @@ const startLoading = async () => {
 
 function analyzeBlock(slot, block) {
   let dbKeys = ['block', 'block_time', 'fee_amt'];
-  let dbValues = [slot, block.blockTime, getFees(block)];
-  console.log(dbValues);
+  let dbValues = [slot, convertEpochToTimestamp(block.blockTime), getFees(block)];
   insertNewBlock(dbKeys, dbValues);
 }
 
