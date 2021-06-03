@@ -5,7 +5,7 @@ const { insertNewBlock } = require('./db.service')
 
 const startLoading = async () => {
   let currentSlot = (await getCurrentSlot()).data.result;
-  let sleepTime = 500;
+  let sleepTime = 400;
   while (true) {
     getConfirmedBlock(currentSlot).then(response => {
       let block = response[1].data;
@@ -20,7 +20,7 @@ const startLoading = async () => {
         console.log(block.error);
       } else {
         analyzeBlock(slot, block.result);
-        sleepTime = 500;
+        sleepTime = 400;
       }
     }).catch(reason => {
       console.log(reason);
