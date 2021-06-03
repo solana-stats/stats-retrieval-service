@@ -35,9 +35,9 @@ const startLoading = async () => {
 function analyzeBlock(slot, block) {
   let transactionInfo = getTransactionInfo(block);
   let dbKeys = ['block', 'block_time', 'fee_amt', 'num_transactions',
-    'num_failed_transactions', 'num_success_transactions', 'num_voting'];
+    'num_failed_transactions', 'num_success_transactions'];
   let dbValues = [slot, convertEpochToTimestamp(block.blockTime), transactionInfo.fees, transactionInfo.total,
-    transactionInfo.numFailed, transactionInfo.numSuccess, transactionInfo.numVote];
+    transactionInfo.numFailed, transactionInfo.numSuccess];
   insertNewBlock(dbKeys, dbValues);
 }
 
