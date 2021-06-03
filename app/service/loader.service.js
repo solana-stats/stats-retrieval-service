@@ -1,11 +1,11 @@
-const { getFees } = require('./transaction.service');
+const { getTransactionInfo } = require('./transaction.service');
 const { getCurrentSlot, getConfirmedBlock } = require('./rpc.service')
-const { sleep } = require('../util/loader.helper')
+const { sleep, convertEpochToTimestamp } = require('../util/loader.helper')
 const { insertNewBlock } = require('./db.service')
 
 const startLoading = async () => {
   let currentSlot = (await getCurrentSlot()).data.result;
-  let sleepTime = 500;
+  let sleepTime = 400;
   while (true) {
     getConfirmedBlock(currentSlot).then(response => {
       let block = response[1].data;
@@ -20,7 +20,7 @@ const startLoading = async () => {
         console.log(block.error);
       } else {
         analyzeBlock(slot, block.result);
-        sleepTime = 500;
+        sleepTime = 400;
       }
     }).catch(reason => {
       console.log(reason);
@@ -33,9 +33,11 @@ const startLoading = async () => {
 }
 
 function analyzeBlock(slot, block) {
-  let dbKeys = ['block', 'block_time', 'fee_amt'];
-  let dbValues = [slot, block.blockTime, getFees(block)];
-  console.log(dbValues);
+  let transactionInfo = getTransactionInfo(block);
+  let dbKeys = ['block', 'block_time', 'fee_amt', 'num_transactions',
+    'num_failed_transactions', 'num_success_transactions', 'num_voting'];
+  let dbValues = [slot, convertEpochToTimestamp(block.blockTime), transactionInfo.fees, transactionInfo.total,
+    transactionInfo.numFailed, transactionInfo.numSuccess, transactionInfo.numVote];
   insertNewBlock(dbKeys, dbValues);
 }
 
