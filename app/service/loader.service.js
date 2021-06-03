@@ -18,9 +18,10 @@ const startLoading = async () => {
       } else if (block.error) {
         console.log(`Unknown error ${block.error}`);
         console.log(block.error);
+        sleepTime = 5000;
       } else {
         analyzeBlock(slot, block.result);
-        sleepTime = 400;
+        sleepTime = 500;
       }
     }).catch(reason => {
       console.log(reason);
