@@ -10,7 +10,7 @@
       "containerPort": 8080,
       "hostPort": 0
     }],
-    "logConfigurations": {
+    "logConfiguration": {
       "logDriver": "awslogs",
       "options": {
         "awslogs-group": "ecs/retrieval-service",
