@@ -24,10 +24,10 @@ const cleanUpTasks = async () => {
 }
 
 const scheduleTasks = async () => {
-  let lastSlot = await client.query(`select block from stats.block_stats order by block desc limit 1`);
-  let latestTask = await client.query(`select slot from stats.tasks order by slot desc limit 1`);
-
   await getTaskPosition();
+
+  let lastSlot = await client.query(`select block from stats.block_stats where mod (block, 2) = ${process.env['taskPosition']} order by block desc limit 1`);
+  let latestTask = await client.query(`select slot from stats.tasks where mod (block, 2) = ${process.env['taskPosition']} order by slot desc limit 1`);
 
   let latestScheduled = 0;
   if (!latestTask.rows[0] || lastSlot.rows[0].block >= latestTask.rows[0].slot) {

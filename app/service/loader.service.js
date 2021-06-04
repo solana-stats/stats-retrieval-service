@@ -36,7 +36,6 @@ const startLoading = async () => {
       await cleanUpTasks();
       await scheduleTasks();
       tasks = await getTasks();
-      console.log(tasks.rows);
       taskIndex = 0;
     } else {
       taskIndex++;
