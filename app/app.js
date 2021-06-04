@@ -4,6 +4,7 @@ var logger = require('morgan');
 
 var healthRoute = require('./routes/health');
 const { readSecrets } = require('./config/secrets.config');
+const { v4: uuidv4 } = require('uuid');
 
 var app = express();
 
@@ -16,6 +17,7 @@ app.use('/retrieval-service/health', healthRoute);
 
 async function init() {
   await readSecrets();
+  process.env['taskName'] = uuidv4();
 }
 
 init().then(() => {
