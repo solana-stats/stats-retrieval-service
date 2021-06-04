@@ -27,7 +27,7 @@ const scheduleTasks = async () => {
   await getTaskPosition();
 
   let lastSlot = await client.query(`select block from stats.block_stats where mod (block, 2) = ${process.env['taskPosition']} order by block desc limit 1`);
-  let latestTask = await client.query(`select slot from stats.tasks where mod (block, 2) = ${process.env['taskPosition']} order by slot desc limit 1`);
+  let latestTask = await client.query(`select slot from stats.tasks where mod (slot, 2) = ${process.env['taskPosition']} and task_type = 'retrieval' order by slot desc limit 1`);
 
   let latestScheduled = 0;
   if (!latestTask.rows[0] || lastSlot.rows[0].block >= latestTask.rows[0].slot) {
@@ -53,7 +53,7 @@ const createInsertTaskQuery = (tasks) => {
 
 const getTaskPosition = async () => {
   if (!process.env['taskPosition']) {
-    let taskPosition = await client.query(`select task_position from stats.tasks order by slot desc limit 1`);
+    let taskPosition = await client.query(`select task_position from stats.tasks where task_type = 'retrieval' order by slot desc limit 1`);
     if (!taskPosition.rows[0]) {
       process.env['taskPosition'] = 0;
     } else {
