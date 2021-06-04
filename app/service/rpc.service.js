@@ -44,8 +44,7 @@ const getRpcUrl = () => {
 const getConfirmedBlock = async (slot) => {
   const endpoint = getRpcUrl();
   const getBlock = getBlockBody(slot);
-  const blockResponse = await axios.post(endpoint, getBlock);
-  return [slot, blockResponse];
+  return await axios.post(endpoint, getBlock);
 };
 
 const getCurrentSlot = () => {

@@ -1,34 +1,46 @@
 const { getTransactionInfo } = require('./transaction.service');
-const { getCurrentSlot, getConfirmedBlock } = require('./rpc.service')
+const { getConfirmedBlock } = require('./rpc.service')
 const { sleep, convertEpochToTimestamp } = require('../util/loader.helper')
-const { insertNewBlock } = require('./db.service')
+const { insertNewBlock, getTasks, scheduleTasks, cleanUpTasks } = require('./db.service')
 
 const startLoading = async () => {
-  let currentSlot = (await getCurrentSlot()).data.result;
+
   let sleepTime = 400;
+  let taskIndex = 0;
+  await scheduleTasks();
+  let tasks = await getTasks();
   while (true) {
-    getConfirmedBlock(currentSlot).then(response => {
-      let block = response[1].data;
-      let slot = response[0];
+    let currentSlot = tasks.rows[taskIndex].slot;
+    try {
+      let confirmedBlock = await getConfirmedBlock(currentSlot);
+      let block = confirmedBlock.data;
       if (block.error && block.error.code === -32007) {
-        insertSkippedBlock(slot);
+        insertSkippedBlock(currentSlot);
       } else if (block.error && block.error.code === -32004) {
-        currentSlot--;
-        sleepTime = 5000;
+        taskIndex--;
+        sleepTime = 1500;
       } else if (block.error) {
         console.log(`Unknown error ${block.error}`);
         console.log(block.error);
-        sleepTime = 5000;
+        sleepTime = 1500;
       } else {
-        analyzeBlock(slot, block.result);
+        analyzeBlock(currentSlot, block.result);
         sleepTime = 500;
       }
-    }).catch(reason => {
-      console.log(reason);
-      currentSlot--;
+    } catch (e) {
+      console.log(e);
+      taskIndex--;
       sleepTime = 10000;
-    });
-    currentSlot++;
+    }
+    if (taskIndex === tasks.rows.length - 1) {
+      await cleanUpTasks();
+      await scheduleTasks();
+      tasks = await getTasks();
+      console.log(tasks.rows);
+      taskIndex = 0;
+    } else {
+      taskIndex++;
+    }
     await sleep(sleepTime);
   }
 }
