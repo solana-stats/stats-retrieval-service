@@ -18,11 +18,11 @@ const startLoading = async () => {
         insertSkippedBlock(currentSlot);
       } else if (block.error && block.error.code === -32004) {
         taskIndex--;
-        sleepTime = 1500;
+        sleepTime = 2500;
       } else if (block.error) {
         console.log(`Unknown error ${block.error}`);
         console.log(block.error);
-        sleepTime = 1500;
+        sleepTime = 2500;
       } else {
         analyzeBlock(currentSlot, block.result);
         sleepTime = 500;
