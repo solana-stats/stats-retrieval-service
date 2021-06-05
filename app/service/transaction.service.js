@@ -1,9 +1,11 @@
+const { SERUM_V3_ADDRESS } = require("../util/constants");
 
 const getTransactionInfo = (block) => {
   let feeAmount = 0;
   let numFailed = 0;
   let numSuccess = 0;
   let numVote = 0;
+  let numSerum = 0;
 
   for (const transaction of block.transactions) {
     feeAmount += getFee(transaction);
@@ -15,6 +17,9 @@ const getTransactionInfo = (block) => {
     if (isVote(transaction)) {
       numVote += 1;
     }
+    if (isSerum(transaction)) {
+      numSerum += 1;
+    }
   }
 
   return {
@@ -22,7 +27,8 @@ const getTransactionInfo = (block) => {
     'total': getNumTransactions(block),
     'numFailed': numFailed,
     'numSuccess': numSuccess,
-    'numVote': numVote
+    'numVote': numVote,
+    'numSerum': numSerum
   }
 }
 
@@ -38,6 +44,17 @@ const isVote = (transaction) => {
   transaction = transaction.transaction;
   if (transaction && transaction.message && transaction.message.instructions) {
     if (transaction.message.instructions[0].program === "vote") {
+      return true;
+    }
+  }
+  return false;
+}
+
+const isSerum = (transaction) => {
+
+  transaction = transaction.transaction;
+  if (transaction && transaction.message && transaction.message.instructions) {
+    if (transaction.message.instructions[0].programId === SERUM_V3_ADDRESS) {
       return true;
     }
   }
