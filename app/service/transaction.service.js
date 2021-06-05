@@ -34,9 +34,12 @@ const isFailed = (transaction) => {
 }
 
 const isVote = (transaction) => {
-  if (transaction.transaction && transaction.message && transaction.message.instructions &&
-    transaction.message.instructions[0].program === "vote") {
-    return true;
+
+  transaction = transaction.transaction;
+  if (transaction && transaction.message && transaction.message.instructions) {
+    if (transaction.message.instructions[0].program === "vote") {
+      return true;
+    }
   }
   return false;
 }

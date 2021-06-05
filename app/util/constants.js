@@ -1,0 +1,1 @@
+exports.SERUM_V3_ADDRESS = '9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin';
