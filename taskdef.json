@@ -6,7 +6,7 @@
     "name": "retrieval-service",
     "image": "solana-stats/retrieval-service",
     "cpu": 2048,
-    "memory": 900,
+    "memory": 450,
     "portMappings": [{
       "containerPort": 8080,
       "hostPort": 0
